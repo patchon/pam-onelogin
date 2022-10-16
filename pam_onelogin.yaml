@@ -1,0 +1,62 @@
+#
+# Configuration file for pam-onelogin.
+# Simple yaml-like syntax.
+# Key: Value, where value is either true/false/string.
+#
+# Notes
+# - String values should be without quotes, no exceptions.
+# - The option 'onelogin_user_roles' should be an array of roles.
+#   Each role on seperate line, specified as '- rolename'
+#
+# With that said, the parsing is very naive and crude, and you will
+# break it if you try.
+#
+
+# Enable/disable debug/trace messages. Warnings and errors are always
+# printed, both on stdout and syslog.
+debug: true
+trace: true
+
+# Enable/disable output on stdout/syslog.
+# Note that, while having the output on stdout could be convenient, it
+# becomes quite messy and isn't really suitable for anything other than
+# debugging.
+log_stdout: false
+log_syslog: true
+
+# Optional group to add onelogin users to. This group has to exist on the
+# system. An example could be 'wheel', which would add all onelogin users
+# to the 'wheel' group and thus enable sudo for them (granted that you have
+# that configured of course).
+auto_add_group_to_user: wheel
+
+# The onelogin client id/secrets for using the onelogin api with "read users"
+# permissions. We need this when querying onelogin for users and their
+# associated data.
+onelogin_client_read_id: XXX
+onelogin_client_read_secret: XXX
+
+# The onelogin client id/secrets for using the onelogin api with the
+# "authentication only" permissions. We need this to verify users OTP.
+onelogin_client_auth_only_id: XXX
+onelogin_client_auth_only_secret: XXX
+
+# The onelogin region to use
+onelogin_region: eu
+
+# The onelogin subdomain that you want to use
+onelogin_subdomain: example-domain
+
+# Append this domain to username when doing lookup. This is domain after the @ for
+# onelogin-usernames, ie. if the username is example-user@example-domain.org, then
+# this value should simply be example-domain.org
+onelogin_user_domain_append: example-domain.org
+
+# Roles in onelogin that the user needs to have to be granted access.
+# Each role should be specified on separate rows, starting with a '- ', ie. '- myrole'.
+# Note that this is OR'ed, so if the user has any of the roles, access will be granted.
+# Spaces not allowed.
+onelogin_user_roles:
+  - my-example-role
+  - my-other-role
+  - third-role
