@@ -25,10 +25,10 @@ looking up users and groups through the onelogin-nss-library.
 When an authentication attempt is being made, the users is looked up from cache,
 and if found, the user is the asked to authenticate with password and OTP.
 
+![Alt Text](./demo.gif)
+
 **:warning: NOTE :warning:**
 * This should **only** be used as proof-of-concept - **you have been warned**.
-
-![Alt Text](./demo.gif)
 
 ## :computer: How do I use it ?
 ### Prerequires
