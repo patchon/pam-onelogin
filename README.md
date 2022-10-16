@@ -183,8 +183,7 @@ authenticating to your server.
 
 ## :warning: Caveats
 This is a proof of concept and the author does not take any responsibility for
-what may happen if you decide to use it. With that being said, it seems to work
-as expected in my testing environment.
+what may happen if you decide to use it. 
 
 A few other warnings,
 
@@ -195,7 +194,7 @@ at. Please don't judge.
 * The configuation file for pam-onelogin is readable by everyone that has access
 to the system.
 
-* With that out of the way, it seems to work as expected in my test-environment.
+With that being said, it seems to work as expected in my testing environment.
 
 ## :hammer: Todo's
 - [ ] Major cleanup (in all regards).
