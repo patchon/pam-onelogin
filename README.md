@@ -8,7 +8,7 @@ It consists of the following parts,
 * a standalone nss-library which handles user/group lookups
 * a standalone pam-library which handles authentication from the pam-stack.
 
-The idea is simple and the goal is to have Onelogin as authentication source, as
+The idea is simple and the goal is to have OneLogin as authentication source, as
 well as users/group information.
 
 You simply specify a required onelogin-role that the users must have to gain
