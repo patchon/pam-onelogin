@@ -138,7 +138,7 @@ $ > groups jane.doe
 ```bash
 # Add pam_onelogin.so to the pam-config for SSH
 $ > sudo vim /etc/pam.d/ssh
-                                           Add the following row
+                                           # Add the following row
  auth       sufficient   pam_onelogin.so  ⤶
  auth       substack     password-auth
  auth       include      postlogin
@@ -168,8 +168,8 @@ $ > sudo vim /etc/pam.d/password-auth
 session     optional                                     pam_keyinit.so revoke
 session     required                                     pam_limits.so
 -session    optional                                     pam_systemd.so
-                                                                ⤹ Add pam_oddjob_mkhomedir.so module
-session     optional                                     pam_oddjob_mkhomedir.so
+                                                                                  # Add the following row
+session     optional                                     pam_oddjob_mkhomedir.so ⤶
 session     [success=1 default=ignore]                   pam_succeed_if.so service in crond quiet use_uid
 session     required                                     pam_unix.so
 session     optional                                     pam_sss.so
