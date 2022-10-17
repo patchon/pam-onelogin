@@ -163,6 +163,7 @@ $ > sudo systemctl restart sshd
 
 # Enable autocreation of home directory,
 $ > sudo [ dnf | yum ] install oddjob-mkhomedir
+$ > sudo systemctl --now enable oddjobd
 $ > sudo vim /etc/pam.d/password-auth
 
 session     optional                                     pam_keyinit.so revoke
@@ -194,6 +195,12 @@ at. Please don't judge.
 * The configuration file for pam-onelogin is readable by everyone that has access
 to the system.
 
+* When authentication is being made against OneLogin, both password **and** OTP
+is required. One could argue (even though it's not implemented
+at the moment) that you never want to enter your OneLogin password anywhere else
+than to OneLogin.com website. This would mean that you only would have to enter
+the OTP when accessing a server and no password.
+
 With that being said, it seems to work as expected in my testing environment.
 
 ## :hammer: Todo's
@@ -202,6 +209,7 @@ With that being said, it seems to work as expected in my testing environment.
 everywhere.
 - [ ] Make **onelogin-mkcache** a daemon so it can sync users / groups at
 configured interval, also create systemd service for it.
+- [ ] Make an option for not verifying user password and only ask for OTP.
 - [ ] Make the '/etc/pam-onelogin/pam_onelogin.yaml' only readable by root and
 redesign the **pam_module** so it somehow can get the API credentials, without
 being root.
