@@ -223,7 +223,7 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc,
   if (!config.disable_user_password_verification.value) {
     char user_input_password[128] = {'\0'};
     char user_input_msg_password[64] =
-        "\n\nEnter your OneLogin Password (not OTP) :";
+        "\n\nEnter your OneLogin Password (not OTP) : ";
     if (!pam_onelogin_get_input(user_input_password, pamh, name,
                                 sizeof(user_input_password),
                                 user_input_msg_password, PAM_PROMPT_ECHO_OFF)) {
@@ -259,7 +259,7 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc,
   ptrc("selected otp device is '%i'", selected_otp_device);
 
   char user_input_otp[128] = {'\0'};
-  char user_input_msg_otp[64] = "\n\nEnter your OTP :";
+  char user_input_msg_otp[64] = "\n\nEnter your OTP : ";
   if (otps[selected_otp_device].onelogin_allows_for_push != 1) {
     if (!pam_onelogin_get_input(user_input_otp, pamh, name,
                                 sizeof(user_input_otp), user_input_msg_otp,
