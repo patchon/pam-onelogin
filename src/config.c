@@ -62,7 +62,7 @@ void config_parse_file(const char* fname) {
   // Do crude parsing to see if we have enabled any debug
   while (fgets(line, sizeof(line), file)) {
     line[strcspn(line, "\n")] = 0;
-    if(!isalpha(line[0])){
+    if (!isalpha(line[0])) {
       continue;
     }
     if (strstr(line, "trace") != NULL) {
