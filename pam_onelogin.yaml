@@ -30,6 +30,13 @@ log_syslog: true
 # that configured of course).
 auto_add_group_to_user: wheel
 
+# Disable user password verification. If you decide to disable this, the user
+# wont be asked fir his OneLogin password. The pam-module will directly query
+# the user for its OTP-devices. This means that if a malicious user guesses a
+# username, he can trigger an OTP activation for that particular user.
+# ! Use with caution !
+disable_user_password_verification: false
+
 # The onelogin client id/secrets for using the onelogin api with "read users"
 # permissions. We need this when querying onelogin for users and their
 # associated data.

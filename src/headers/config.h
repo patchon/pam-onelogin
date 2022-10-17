@@ -35,6 +35,7 @@ struct config_opt_int {
 // Struct for handling curl response data
 typedef struct Config {
   struct config_opt_str auto_add_group_to_user;
+  struct config_opt_int disable_user_password_verification;
   struct config_opt_int debug;
   struct config_opt_int log_stdout;
   struct config_opt_int log_syslog;

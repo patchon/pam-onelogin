@@ -32,8 +32,9 @@
 
 #include "headers/logging.h"
 
-char config_valid_options[10][64] = {
+char config_valid_options[11][64] = {
     "auto_add_group_to_user",
+    "disable_user_password_verification",
     "onelogin_client_auth_only_id",
     "onelogin_client_auth_only_secret",
     "onelogin_client_read_id",
@@ -112,6 +113,8 @@ void config_parse_file(const char* fname) {
   pinf("finished parsing file");
   pinf("config set as ");
   pinf("- auto_add_group_to_user : '%s'", config.auto_add_group_to_user.value);
+  pinf("- disable_user_password_verification : '%s'",
+       config.disable_user_password_verification.value);
   pinf("- debug : '%i'", config.debug.value);
   pinf("- log_stdout : '%i'", config.log_stdout.value);
   pinf("- log_syslog : '%i'", config.log_syslog.value);
@@ -243,6 +246,12 @@ void config_validate_option_value(const char* option, char* value) {
       if (strcmp(option, "auto_add_group_to_user") == 0) {
         strncpy(config.auto_add_group_to_user.value, &value[i],
                 sizeof(config.auto_add_group_to_user.value) - 1);
+      } else if (strcmp(option, "disable_user_password_verification") == 0) {
+        if (config_is_value_true(&value[i])) {
+          config.disable_user_password_verification.value = 1;
+        } else {
+          config.disable_user_password_verification.value = 0;
+        }
       } else if (strcmp(option, "onelogin_client_auth_only_id") == 0) {
         config_is_value_length_ok("onelogin_client_auth_only_id", &value[i],
                                   128);

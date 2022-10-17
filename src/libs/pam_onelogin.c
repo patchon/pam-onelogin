@@ -220,20 +220,21 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc,
   // Set the timeout again since the curl handle was reset
   curl_easy_setopt(ch, CURLOPT_TIMEOUT, CURL_TIMEOUT);
 
-  char user_input_password[128] = {'\0'};
-  char user_input_msg_password[64] =
-      "\n\nEnter your OneLogin Password (not OTP) :";
-  if (!pam_onelogin_get_input(user_input_password, pamh, name,
-                              sizeof(user_input_password),
-                              user_input_msg_password, PAM_PROMPT_ECHO_OFF)) {
-    goto cleanup;
-  }
+  if (!config.disable_user_password_verification.value) {
+    char user_input_password[128] = {'\0'};
+    char user_input_msg_password[64] =
+        "\n\nEnter your OneLogin Password (not OTP) :";
+    if (!pam_onelogin_get_input(user_input_password, pamh, name,
+                                sizeof(user_input_password),
+                                user_input_msg_password, PAM_PROMPT_ECHO_OFF)) {
+      goto cleanup;
+    }
 
-  if (!onelogin_verify_password(ch, curl_buffer, bearer_auth_cap, name,
-                                user_input_password)) {
-    goto cleanup;
+    if (!onelogin_verify_password(ch, curl_buffer, bearer_auth_cap, name,
+                                  user_input_password)) {
+      goto cleanup;
+    }
   }
-
   // Get enrolled otps for the user
   if (!onelogin_get_enrolled_otps_for_user(ch, curl_buffer, bearer, pw.pw_uid,
                                            otps)) {
