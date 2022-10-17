@@ -113,7 +113,7 @@ void config_parse_file(const char* fname) {
   pinf("finished parsing file");
   pinf("config set as ");
   pinf("- auto_add_group_to_user : '%s'", config.auto_add_group_to_user.value);
-  pinf("- disable_user_password_verification : '%s'",
+  pinf("- disable_user_password_verification : '%d'",
        config.disable_user_password_verification.value);
   pinf("- debug : '%i'", config.debug.value);
   pinf("- log_stdout : '%i'", config.log_stdout.value);
