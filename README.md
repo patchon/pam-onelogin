@@ -137,7 +137,7 @@ $ > groups jane.doe
 #### Add pam_onelogin.so to SSH
 ```bash
 # Add pam_onelogin.so to the pam-config for SSH
-$ > sudo vim /etc/pam.d/ssh
+$ > sudo vim /etc/pam.d/sshd
                                            # Add the following row
  auth       sufficient   pam_onelogin.so  ⤶
  auth       substack     password-auth
