@@ -30,6 +30,13 @@ and if found, the user is the asked to authenticate with password and OTP.
 **:warning: NOTE :warning:**
 * This should **only** be used as proof-of-concept - **you have been warned**.
 
+## Why ?
+Well the reason is quite simple,
+* If you have an organization that uses [OneLogin](https://www.onelogin.com) for
+user and group administration and you want to utilize this on servers, you can
+simply use this pam/nss-stack. This gives you the benefit of moving the administration
+for user, groups **and** access from your servers to [OneLogin](https://www.onelogin.com).
+
 ## :computer: How do I use it ?
 ### Prerequisites
 
