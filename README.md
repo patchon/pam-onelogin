@@ -31,7 +31,7 @@ and if found, the user is the asked to authenticate with password and OTP.
 * This should **only** be used as proof-of-concept - **you have been warned**.
 
 ## :computer: How do I use it ?
-### Prerequires
+### Prerequisites
 
 * A working OneLogin organization
 * OneLogin API-keys
