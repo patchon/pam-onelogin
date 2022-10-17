@@ -191,7 +191,7 @@ A few other warnings,
 contains quite a few bugs and might not be the most beautiful thing you've looked
 at. Please don't judge.
 
-* The configuation file for pam-onelogin is readable by everyone that has access
+* The configuration file for pam-onelogin is readable by everyone that has access
 to the system.
 
 With that being said, it seems to work as expected in my testing environment.
