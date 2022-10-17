@@ -31,7 +31,7 @@ and if found, the user is the asked to authenticate with password and OTP.
 * This should **only** be used as proof-of-concept - **you have been warned**.
 
 ## :computer: How do I use it ?
-### Prerequires
+### Prerequisites
 
 * A working OneLogin organization
 * OneLogin API-keys
@@ -70,7 +70,7 @@ This is literally a copy and paste from a clean install of CentOS 9.
 ```bash
 
 # Get dependencies and clone repo
-$ > sudo dnf install git gcc libcurl-devel make pam-devel
+$ > sudo [ dnf | yum ] install git gcc libcurl-devel make pam-devel
 $ > git clone https://github.com/patchon/pam-onelogin
 $ > cd pam-onelogin
 
@@ -162,7 +162,7 @@ $ > sudo setsebool -P authlogin_yubikey 1
 $ > sudo systemctl restart sshd
 
 # Enable autocreation of home directory,
-$ > sudo dnf install oddjob-mkhomedir
+$ > sudo [ dnf | yum ] install oddjob-mkhomedir
 $ > sudo vim /etc/pam.d/password-auth
 
 session     optional                                     pam_keyinit.so revoke
@@ -178,12 +178,12 @@ session     optional                                     pam_sss.so
 > **Note**<br><br>
 > For CentOS 7 / 8 the SSH configuration file is '/etc/ssh/sshd_config'
 
-At this point, your users should be able to use their Onelogin usernames for
+At this point, your users should be able to use their OneLogin usernames for
 authenticating to your server.
 
 ## :warning: Caveats
 This is a proof of concept and the author does not take any responsibility for
-what may happen if you decide to use it. 
+what may happen if you decide to use it.
 
 A few other warnings,
 
@@ -209,4 +209,5 @@ being root.
 different additional groups depending on which role you may have. Today it only
 accepts one group, and all users that have **any** of the Onelogin-roles will
 get this additional group.
+- [ ] Make integration against Active Directory group membership, if your OneLogin is backed by it
 - [ ] Package everything into an RPM.
