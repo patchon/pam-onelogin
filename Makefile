@@ -50,9 +50,7 @@ ${DIR_BIN}/${PAM_ONELOGIN_NAME}: ${HEADERS} ${COMMON_SRC} ${PAM_ONELOGIN_SRC}
 
 # Install library
 install: ${DIR_DEST}/${LIBNSS_ONELOGIN_NAME}
-${DIR_DEST}/${LIBNSS_ONELOGIN_NAME}: ${DIR_BIN}/${LIBNSS_ONELOGIN_NAME}	 		\
-																		 ${DIR_DEST}/${LIBNSS_ONELOGIN_NAME_SO} \
-																		 all
+${DIR_DEST}/${LIBNSS_ONELOGIN_NAME}: ${DIR_BIN}/${LIBNSS_ONELOGIN_NAME}	${DIR_DEST}/${LIBNSS_ONELOGIN_NAME_SO} all
 	install -d ${DIR_DEST}
 	install -d ${DIR_CFG}
 	install -m 0655 -b -S .bkp ${PAM_ONELOGIN_CFG} ${DIR_CFG}
