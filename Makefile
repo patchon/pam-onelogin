@@ -27,18 +27,18 @@ CACHER_SRC = ${DIR_SRC}/onelogin-mkcache.c
 # Build standalone binary
 onelogin-mkdcache: ${DIR_BIN}/${CACHER_NAME}
 ${DIR_BIN}/${CACHER_NAME}: ${HEADERS} ${COMMON_SRC} ${CACHER_SRC}
-	$(CC) $(CFLAGS) $(LIBS) ${COMMON_SRC} ${CACHER_SRC} -o $@
+	$(CC) $(CFLAGS) ${COMMON_SRC} ${CACHER_SRC} $(LIBS) -o $@
 
 # Build nss library
 libnss_onelogin: ${DIR_BIN}/${LIBNSS_ONELOGIN_NAME}
 ${DIR_BIN}/${LIBNSS_ONELOGIN_NAME}: ${HEADERS} ${COMMON_SRC} ${LIBNSS_ONELOGIN_SRC}
-	$(CC) $(CFLAGS) $(LIBS) ${COMMON_SRC} ${LIBNSS_ONELOGIN_SRC} -fPIC -shared \
+	$(CC) $(CFLAGS) ${COMMON_SRC} ${LIBNSS_ONELOGIN_SRC} $(LIBS) -fPIC -shared \
 	-Wl,-soname,${LIBNSS_ONELOGIN_NAME} -o $@
 
 # Build nss library
 pam_onelogin: ${DIR_BIN}/${PAM_ONELOGIN_NAME}
 ${DIR_BIN}/${PAM_ONELOGIN_NAME}: ${HEADERS} ${COMMON_SRC} ${PAM_ONELOGIN_SRC}
-	$(CC) $(CFLAGS) $(LIBS) ${COMMON_SRC} ${PAM_ONELOGIN_SRC} -fPIC -shared \
+	$(CC) $(CFLAGS) ${COMMON_SRC} ${PAM_ONELOGIN_SRC} $(LIBS) -fPIC -shared \
 	-Wl,-soname,${PAM_ONELOGIN_NAME} -o $@
 
 # Build everything
