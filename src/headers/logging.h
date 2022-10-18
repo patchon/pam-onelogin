@@ -30,6 +30,5 @@ void ptrc(char *str, ...);
 void pfnc(const char *str);
 
 char *timestamp(void);
-int calculate_buf_length(char *str, va_list argp_copy);
 
 #endif
