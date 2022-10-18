@@ -23,6 +23,8 @@ STANDALONE_SRC = ${DIR_SRC}/standalone.c
 CACHER_NAME = onelogin-mkcache
 CACHER_SRC = ${DIR_SRC}/onelogin-mkcache.c
 
+.PHONY: all onelogin-mkdcache libnss_onelogin pam_onelogin install uninstall clean
+
 # Build everything
 all: libnss_onelogin pam_onelogin onelogin-mkdcache
 
