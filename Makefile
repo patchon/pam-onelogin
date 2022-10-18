@@ -23,6 +23,10 @@ STANDALONE_SRC = ${DIR_SRC}/standalone.c
 CACHER_NAME = onelogin-mkcache
 CACHER_SRC = ${DIR_SRC}/onelogin-mkcache.c
 
+.PHONY: all onelogin-mkdcache libnss_onelogin pam_onelogin install uninstall clean
+
+# Build everything
+all: libnss_onelogin pam_onelogin onelogin-mkdcache
 
 # Build standalone binary
 onelogin-mkdcache: ${DIR_BIN}/${CACHER_NAME}
@@ -44,14 +48,9 @@ ${DIR_BIN}/${PAM_ONELOGIN_NAME}: ${HEADERS} ${COMMON_SRC} ${PAM_ONELOGIN_SRC}
 	$(CC) $(CFLAGS) ${COMMON_SRC} ${PAM_ONELOGIN_SRC} $(LIBS) -fPIC -shared \
 	-Wl,-soname,${PAM_ONELOGIN_NAME} -o $@
 
-# Build everything
-all: libnss_onelogin pam_onelogin onelogin-mkdcache
-
 # Install library
 install: ${DIR_DEST}/${LIBNSS_ONELOGIN_NAME}
-${DIR_DEST}/${LIBNSS_ONELOGIN_NAME}: ${DIR_BIN}/${LIBNSS_ONELOGIN_NAME}	 		\
-																		 ${DIR_DEST}/${LIBNSS_ONELOGIN_NAME_SO} \
-																		 all
+${DIR_DEST}/${LIBNSS_ONELOGIN_NAME}: ${DIR_BIN}/${LIBNSS_ONELOGIN_NAME}	${DIR_DEST}/${LIBNSS_ONELOGIN_NAME_SO} all
 	install -d ${DIR_DEST}
 	install -d ${DIR_CFG}
 	install -m 0655 -b -S .bkp ${PAM_ONELOGIN_CFG} ${DIR_CFG}
