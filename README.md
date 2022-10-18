@@ -15,13 +15,13 @@ as authentication source, as well as users/group information.
 
 You simply specify a required onelogin-role that the users must have to gain
 access to the system (primarily via SSH). Only users that has that required role
-in [OneLogin](https://www.onelogin.com) will be able to access the system, the 
+in [OneLogin](https://www.onelogin.com) will be able to access the system, the
 role will also be 'translated' into standard Linux group (ie. users that has the
 role *example-role* in oneLogin, will belong to a Linux group called *example-role*).
 
 Users do not need to exist on the system since they will be created dynamically
 when running the onelogin-mkcache-binary. Users and group information will then
-be fetched from [OneLogin](https://www.onelogin.com) and cached locally. This 
+be fetched from [OneLogin](https://www.onelogin.com) and cached locally. This
 information is then used when looking up users and groups through the onelogin-nss-library.
 
 When an authentication attempt is being made, the users is looked up from cache,
@@ -207,7 +207,7 @@ to the system.
 * Using the option 'auto_add_group_to_user' with the group 'wheel' makes the users
 members of the group 'wheel', however, if you intend to let the users run sudo, you
 either need to enable "passwordless sudo for wheel", or update the pam-stack for sudo
-and include the 'pam_onelogin.so' module (this however means that you require two 
+and include the 'pam_onelogin.so' module (this however means that you require two
 factor auth everytime someone does 'sudo', which may not be what you want).
 
 * ~~*When authentication is being made against OneLogin, both password **and** OTP
