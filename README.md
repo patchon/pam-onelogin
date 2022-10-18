@@ -1,4 +1,6 @@
 # pam-onelogin
+![Screenshot](logo.png)
+
 ## What is it ?
 pam-onelogin is a pretty complete pam/nss stack for using [OneLogin](https://www.onelogin.com)
 as authentication source (with MFA) and user/group lookups.
