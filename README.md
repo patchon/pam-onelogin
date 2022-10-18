@@ -8,19 +8,19 @@ It consists of the following parts,
 * a standalone nss-library which handles user/group lookups
 * a standalone pam-library which handles authentication from the pam-stack.
 
-The idea is simple and the goal is to have OneLogin as authentication source, as
-well as users/group information.
+The idea is simple and the goal is to have [OneLogin](https://www.onelogin.com)
+as authentication source, as well as users/group information.
 
 You simply specify a required onelogin-role that the users must have to gain
 access to the system (primarily via SSH). Only users that has that required role
-in OneLogin will be able to access the system, the role will also be 'translated'
-into standard Linux group (ie. users that has the role *example-role* in oneLogin,
-will belong to a Linux group called *example-role*).
+in [OneLogin](https://www.onelogin.com) will be able to access the system, the 
+role will also be 'translated' into standard Linux group (ie. users that has the
+role *example-role* in oneLogin, will belong to a Linux group called *example-role*).
 
 Users do not need to exist on the system since they will be created dynamically
 when running the onelogin-mkcache-binary. Users and group information will then
-be fetched from OneLogin and cached locally. This information is then used when
-looking up users and groups through the onelogin-nss-library.
+be fetched from [OneLogin](https://www.onelogin.com) and cached locally. This 
+information is then used when looking up users and groups through the onelogin-nss-library.
 
 When an authentication attempt is being made, the users is looked up from cache,
 and if found, the user is the asked to authenticate with password and OTP.
@@ -40,13 +40,13 @@ for user, groups **and** access from your servers to [OneLogin](https://www.onel
 ## :computer: How do I use it ?
 ### Prerequisites
 
-* A working OneLogin organization
-* OneLogin API-keys
+* A working [OneLogin](https://www.onelogin.com) organization
+* [OneLogin](https://www.onelogin.com) API-keys
 * A standard Linux distro with gcc, curl-devel and pam-devel libraries available.
   * Tested configuration on CentOS 7, 8 and 9.
 
 > **Note**<br><br>
-> You need **two** OneLogin keys.
+> You need **two** [OneLogin](https://www.onelogin.com) keys.
 > * One API-key with the "read users" permission
 > * One API key with the "authentication only" permission
 >
@@ -186,8 +186,8 @@ session     optional                                     pam_sss.so
 > **Note**<br><br>
 > For CentOS 7 / 8 the SSH configuration file is '/etc/ssh/sshd_config'
 
-At this point, your users should be able to use their OneLogin usernames for
-authenticating to your server.
+At this point, your users should be able to use their [OneLogin](https://www.onelogin.com)
+usernames for authenticating to your server.
 
 ## :warning: Caveats
 This is a proof of concept and the author does not take any responsibility for
@@ -231,5 +231,5 @@ being root.
 different additional groups depending on which role you may have. Today it only
 accepts one group, and all users that have **any** of the Onelogin-roles will
 get this additional group.
-- [ ] Make integration against Active Directory group membership, if your OneLogin is backed by it
+- [ ] Make integration against Active Directory group membership, if your [OneLogin](https://www.onelogin.com) is backed by it
 - [ ] Package everything into an RPM.
