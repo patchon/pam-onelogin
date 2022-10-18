@@ -202,6 +202,12 @@ at. Please don't judge.
 * The configuration file for pam-onelogin is readable by everyone that has access
 to the system.
 
+* Using the option 'auto_add_group_to_user' with the group 'wheel' makes the users
+members of the group 'wheel', however, if you intend to let the users run sudo, you
+either need to enable "passwordless sudo for wheel", or update the pam-stack for sudo
+and include the 'pam_onelogin.so' module (this however means that you require two 
+factor auth everytime someone does 'sudo', which may not be what you want).
+
 * ~~*When authentication is being made against OneLogin, both password **and** OTP
 is required. One could argue (even though it's not implemented
 at the moment) that you never want to enter your OneLogin password anywhere else
