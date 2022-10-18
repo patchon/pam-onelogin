@@ -235,3 +235,9 @@ accepts one group, and all users that have **any** of the Onelogin-roles will
 get this additional group.
 - [ ] Make integration against Active Directory group membership, if your [OneLogin](https://www.onelogin.com) is backed by it
 - [ ] Package everything into an RPM.
+
+## :tm: Trademarks
+* [OneLogin®](https://www.onelogin.com) is a trademark owned by [One Identity LLC](https://www.oneidentity.com/legal/trademark-information.aspx) and is not
+affiliated with this repository in any way. Logo is based on the font [Metropolis](https://github.com/dw5/Metropolis)
+and inspired by the design of [adrlyx](https://github.com/adrlyx).
+* [Linux®](https://www.linuxfoundation.org/legal/the-linux-mark) is the registered trademark of Linus Torvalds in the U.S. and other countries.
