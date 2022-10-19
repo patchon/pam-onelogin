@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <syslog.h>
 #include <time.h>
 
@@ -46,16 +47,29 @@ char* timestamp() {
   return buf;
 }
 
-static void _log(bool log_to_stderr, const char *prefix, const char *format, va_list args) {
-  openlog("Logs", LOG_PID, LOG_USER);
+static void _log(const char *prefix, const char *format, va_list args) {
   char* time = timestamp();
-  char logstr[1024];
+  char logstr[2048];
   int len = snprintf(logstr, sizeof(logstr), "[ %s ] [ %s ] ", prefix, time);
   free(time);
   vsnprintf(&logstr[len], sizeof(logstr) - len, format, args);
-  if (log_to_stderr)
+
+  // Errors and warning always prints
+  if (strcmp(prefix, "err") == 0 ||
+      strcmp(prefix, "wrn") == 0){
+    fprintf(stderr, "%s\n", logstr);
+    openlog("pam-onelogin", LOG_PID, LOG_USER);
+    syslog(LOG_INFO, "%s", logstr);
+  }else{
+    // Other messages prints if enabled
+    if (config.log_stdout.value == 1)
       fprintf(stdout, "%s\n", logstr);
-  syslog(LOG_INFO, "%s", logstr);
+
+    if (config.log_syslog.value == 1) {
+      openlog("pam-onelogin", LOG_PID, LOG_USER);
+      syslog(LOG_INFO, "%s", logstr);
+    }
+  }
 }
 
 void pinf(char* str, ...) {
@@ -65,7 +79,7 @@ void pinf(char* str, ...) {
 
   va_list args;
   va_start(args, str);
-  _log(config.log_syslog.value == 1, "inf", str, args);
+  _log("inf", str, args);
   va_end(args);
 }
 
@@ -76,21 +90,21 @@ void ptrc(char* str, ...) {
 
   va_list args;
   va_start(args, str);
-  _log(config.log_syslog.value == 1, "trc", str, args);
+  _log("trc", str, args);
   va_end(args);
 }
 
 void pwrn(char* str, ...) {
   va_list args;
   va_start(args, str);
-  _log(true, "wrn", str, args);
+  _log("wrn", str, args);
   va_end(args);
 }
 
 void perr(char* str, ...) {
   va_list args;
   va_start(args, str);
-  _log(true, "err", str, args);
+  _log("err", str, args);
   va_end(args);
 }
 
