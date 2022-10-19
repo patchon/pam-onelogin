@@ -47,34 +47,72 @@ char* timestamp() {
   return buf;
 }
 
-static void _log(const char *prefix, const char *format, va_list args) {
+int calculate_buf_length(const char* str, va_list argp_copy) {
+  int len;
+  char buf[2];
+
+  // String will never fit buffer, so vsnprintf will always return the length
+  // that we need - the null terminator
+  len = vsnprintf(buf, sizeof(buf), str, argp_copy);
+
+  // Not sure if this can happen
+  if (len < 0) {
+    fprintf(stderr, "error calculating length for log msg, '%s'", str);
+    exit(1);
+  }
+
+  // fprintf(stderr, "calculated length for log msg, '%s' to %d \n", str, len);
+  return len + 1U;
+}
+
+static void _log(const char* prefix, const char* format, va_list args) {
   char* time = timestamp();
 
-  // Note that this buffer can not be larger than 1684.
-  // If we allocate more, then a pointer that holds the pw-entry for the
-  // current user gets overwritten. This is obviously an issue and a bug
-  // somewhere - I just don't know where and how to fix it ¯\_(ツ)_/¯
-  char logstr[1024];
-  int len = snprintf(logstr, sizeof(logstr), "[ %s ] [ %s ] ", prefix, time);
-  free(time);
-  vsnprintf(&logstr[len], sizeof(logstr) - len, format, args);
+  // Make a copy since we need it more than once, im sure there are better ways
+  // for this
+  va_list argp_copy;
+  va_copy(argp_copy, args);
+  va_list argp_copy_;
+  va_copy(argp_copy_, args);
+
+  int len;
+  int ret;
+
+  // Calculate buffer length. The 33 is simply the length of the
+  // '[ xxx ] [ xxxx-xx-xx xx:xx:xx ] '.
+  len = calculate_buf_length(format, argp_copy) + 33;
+  char* buf = malloc(sizeof(char) * len);
+  if (buf == NULL) {
+    fprintf(stderr, "can not allocate buffer for log msg\n");
+    exit(1);
+  }
+
+  // Add loglvel and timestamp to buffer
+  snprintf(buf, 33, "[ %s ] [ %s ] ", prefix, time);
+
+  // Append logmsg to our buffer, after loglevel/timestamp.
+  ret = vsnprintf(&buf[32], len-33, format, argp_copy_);
+  if (ret < 0) {
+    fprintf(stderr, "failed to write log msg to buffer\n");
+    exit(1);
+  }
 
   // Errors and warning always prints
-  if (strcmp(prefix, "err") == 0 ||
-      strcmp(prefix, "wrn") == 0){
-    fprintf(stderr, "%s\n", logstr);
+  if (strcmp(prefix, "err") == 0 || strcmp(prefix, "wrn") == 0) {
+    fprintf(stderr, "%s\n", buf);
     openlog("pam-onelogin", LOG_PID, LOG_USER);
-    syslog(LOG_INFO, "%s", logstr);
-  }else{
+    syslog(LOG_INFO, "%s", buf);
+  } else {
     // Other messages prints if enabled
-    if (config.log_stdout.value == 1)
-      fprintf(stdout, "%s\n", logstr);
+    if (config.log_stdout.value == 1) fprintf(stdout, "%s\n", buf);
 
     if (config.log_syslog.value == 1) {
       openlog("pam-onelogin", LOG_PID, LOG_USER);
-      syslog(LOG_INFO, "%s", logstr);
+      syslog(LOG_INFO, "%s", buf);
     }
   }
+  free(buf);
+  free(time);
 }
 
 void pinf(char* str, ...) {
