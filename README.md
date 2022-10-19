@@ -49,10 +49,10 @@ for user, groups **and** access from your servers to [OneLogin](https://www.onel
 
 > **Note**<br><br>
 > You need **two** [OneLogin](https://www.onelogin.com) keys.
-> * One API-key with the "read users" permission
+> * One API-key with the "read all" permission
 > * One API key with the "authentication only" permission
 >
-> For some reason there is no API-permission that grants you both "read users"
+> For some reason there is no API-permission that grants you both "read all"
 > and "authentication only", except the permissions "Manage users" and "Manage all",
 > which both gives you permission to **delete** users, which you probably don't want.
 >

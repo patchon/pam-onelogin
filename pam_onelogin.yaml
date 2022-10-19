@@ -37,7 +37,7 @@ auto_add_group_to_user: wheel
 # ! Use with caution !
 disable_user_password_verification: false
 
-# The onelogin client id/secrets for using the onelogin api with "read users"
+# The onelogin client id/secrets for using the onelogin api with "read all"
 # permissions. We need this when querying onelogin for users and their
 # associated data.
 onelogin_client_read_id: XXX
