@@ -210,6 +210,9 @@ either need to enable "passwordless sudo for wheel", or update the pam-stack for
 and include the 'pam_onelogin.so' module (this however means that you require two
 factor auth everytime someone does 'sudo', which may not be what you want).
 
+* Enabling the 'log_stdout' option can lead to weird side-effects for **all**
+users - **only** use this when debugging.
+
 * ~~*When authentication is being made against OneLogin, both password **and** OTP
 is required. One could argue (even though it's not implemented
 at the moment) that you never want to enter your OneLogin password anywhere else
@@ -233,6 +236,8 @@ being root.
 different additional groups depending on which role you may have. Today it only
 accepts one group, and all users that have **any** of the Onelogin-roles will
 get this additional group.
+- [ ] The delimiter for the username is hardcoded to '@' at the moment. We should
+make this configurable (not sure if everyone has @ in their OneLogin usernames)
 - [ ] Make integration against Active Directory group membership, if your [OneLogin](https://www.onelogin.com) is backed by it
 - [ ] Package everything into an RPM.
 
