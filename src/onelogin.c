@@ -403,7 +403,7 @@ int onelogin_get_enrolled_otps_for_user(CURL *ch,
 
   // Split will generate a "]" at the end, so make the loop depend on that
   while (token != NULL) {
-    ptrc("extraced '%s' from enrolled otps", token);
+    ptrc("extracted '%s' from enrolled otps", token);
 
     if (strcmp(token, "]") == 0) {
       ptrc("no more otp devices found");
