@@ -366,7 +366,7 @@ int onelogin_get_enrolled_otps_for_user(CURL *ch,
            config.onelogin_subdomain.value, (long unsigned int)user_id);
   snprintf(header_data, sizeof(header_data) - 1, "Authorization: bearer %s",
            bearer);
-  pinf("->looking upasdfasdf otps for user with  id '%d'", user_id);
+  pinf("->looking up otps for user with  id '%d'", user_id);
 
   // Set headers
   headers = curl_slist_append(headers, header_data);
