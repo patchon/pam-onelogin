@@ -311,8 +311,8 @@ void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
                              extracted_onelogin_username);
 
       // Make sure our delimiter is in place
-      if (strcmp(extracted_onelogin_username, "@") == 0) {
-        perr("could not find the '@' delimiter in username - FIX ME");
+      if (strstr(extracted_onelogin_username, "@") == 0) {
+        perr("could not find the '@' delimiter in username");
         exit(1);
       }
 
