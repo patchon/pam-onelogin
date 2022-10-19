@@ -107,7 +107,6 @@ int pam_onelogin_show_otp_devices_and_get_input(char *msg_otp_devices,
 
   while (1) {
     errors++;
-    pinf("here");
     ret = converse(pamh, 1, &msgs, &resp);
 
     if (ret != PAM_SUCCESS || resp == NULL || resp->resp == NULL ||
