@@ -22,8 +22,10 @@
 #include "headers/logging.h"
 
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <syslog.h>
 #include <time.h>
 
@@ -45,21 +47,29 @@ char* timestamp() {
   return buf;
 }
 
-int calculate_buf_length(char* str, va_list argp_copy) {
-  int length;
-  char buf[2];
+static void _log(const char *prefix, const char *format, va_list args) {
+  char* time = timestamp();
+  char logstr[2048];
+  int len = snprintf(logstr, sizeof(logstr), "[ %s ] [ %s ] ", prefix, time);
+  free(time);
+  vsnprintf(&logstr[len], sizeof(logstr) - len, format, args);
 
-  // String will never fit buffer, so vsnprintf will always return the length
-  // that we need - the null terminator
-  length = vsnprintf(buf, sizeof(buf), str, argp_copy);
+  // Errors and warning always prints
+  if (strcmp(prefix, "err") == 0 ||
+      strcmp(prefix, "wrn") == 0){
+    fprintf(stderr, "%s\n", logstr);
+    openlog("pam-onelogin", LOG_PID, LOG_USER);
+    syslog(LOG_INFO, "%s", logstr);
+  }else{
+    // Other messages prints if enabled
+    if (config.log_stdout.value == 1)
+      fprintf(stdout, "%s\n", logstr);
 
-  // Not sure if this can happen
-  if (length < 0) {
-    fprintf(stderr, "error calculating length for log msg, '%s'", str);
-    exit(1);
+    if (config.log_syslog.value == 1) {
+      openlog("pam-onelogin", LOG_PID, LOG_USER);
+      syslog(LOG_INFO, "%s", logstr);
+    }
   }
-
-  return length + 1U;
 }
 
 void pinf(char* str, ...) {
@@ -67,58 +77,10 @@ void pinf(char* str, ...) {
     return;
   }
 
-  if (config.log_syslog.value == 1) {
-    openlog("Logs", LOG_PID, LOG_USER);
-  }
-
-  int ret;
-
-  // Enable use of passing formatted strings directly
-  va_list argp;
-  va_start(argp, str);
-
-  // Make a copy since we need it more than once, im sure there are better ways
-  // for this
-  va_list argp_copy;
-  va_copy(argp_copy, argp);
-  va_list argp_copy_;
-  va_copy(argp_copy_, argp);
-
-  if (config.log_stdout.value == 1) {
-    char* time = timestamp();
-    fprintf(stdout, "[ inf ] [ %s ] ", time);
-    vfprintf(stdout, str, argp);
-    fprintf(stdout, "\n");
-    va_end(argp);
-    free(time);
-  }
-
-  if (config.log_syslog.value == 1) {
-    // Calculate the size we need for our buffer
-    va_start(argp_copy, str);
-    int length;
-    length = calculate_buf_length(str, argp_copy);
-    va_end(argp_copy);
-
-    // Allocate buffer for syslog
-    char* buf = malloc(sizeof(char) * length);
-    if (buf == NULL) {
-      fprintf(stderr, "can not allocate buffer for log msg\n");
-      exit(1);
-    }
-
-    va_start(argp_copy_, str);
-
-    ret = vsprintf(buf, str, argp_copy_);
-    if (ret < 0) {
-      fprintf(stderr, "failed to write log msg to buffer\n");
-      exit(1);
-    }
-    va_end(argp_copy_);
-
-    syslog(LOG_INFO, buf);
-    free(buf);
-  }
+  va_list args;
+  va_start(args, str);
+  _log("inf", str, args);
+  va_end(args);
 }
 
 void ptrc(char* str, ...) {
@@ -126,154 +88,24 @@ void ptrc(char* str, ...) {
     return;
   }
 
-  if (config.log_syslog.value == 1) {
-    openlog("Logs", LOG_PID, LOG_USER);
-  }
-
-  int ret;
-
-  // Enable use of passing formatted strings directly
-  va_list argp;
-  va_start(argp, str);
-
-  // Make a copy since we need it more than once, im sure there are better ways
-  // for this
-  va_list argp_copy;
-  va_copy(argp_copy, argp);
-  va_list argp_copy_;
-  va_copy(argp_copy_, argp);
-
-  if (config.log_stdout.value == 1) {
-    char* time = timestamp();
-    fprintf(stdout, "[ trc ] [ %s ] ", time);
-    vfprintf(stdout, str, argp);
-    fprintf(stdout, "\n");
-    va_end(argp);
-    free(time);
-  }
-
-  if (config.log_syslog.value == 1) {
-    // Calculate the size we need for our buffer
-    va_start(argp_copy, str);
-    int length;
-    length = calculate_buf_length(str, argp_copy);
-    va_end(argp_copy);
-
-    // Allocate buffer for syslog
-    char* buf = malloc(sizeof(char) * length);
-    if (buf == NULL) {
-      fprintf(stderr, "can not allocate buffer for log msg\n");
-      exit(1);
-    }
-
-    va_start(argp_copy_, str);
-
-    ret = vsprintf(buf, str, argp_copy_);
-    if (ret < 0) {
-      fprintf(stderr, "failed to write log msg to buffer\n");
-      exit(1);
-    }
-    va_end(argp_copy_);
-
-    syslog(LOG_INFO, buf);
-    free(buf);
-  }
+  va_list args;
+  va_start(args, str);
+  _log("trc", str, args);
+  va_end(args);
 }
 
 void pwrn(char* str, ...) {
-  openlog("Logs", LOG_PID, LOG_USER);
-
-  int ret;
-
-  // Enable use of passing formatted strings directly
-  va_list argp;
-  va_start(argp, str);
-
-  // Make a copy since we need it more than once, im sure there are better ways
-  // for this
-  va_list argp_copy;
-  va_copy(argp_copy, argp);
-  va_list argp_copy_;
-  va_copy(argp_copy_, argp);
-
-  char* time = timestamp();
-  fprintf(stdout, "[ wrn ] [ %s ] ", time);
-  vfprintf(stdout, str, argp);
-  fprintf(stdout, "\n");
-  va_end(argp);
-  free(time);
-  // Calculate the size we need for our buffer
-  va_start(argp_copy, str);
-  int length;
-  length = calculate_buf_length(str, argp_copy);
-  va_end(argp_copy);
-
-  // Allocate buffer for syslog
-  char* buf = malloc(sizeof(char) * length);
-  if (buf == NULL) {
-    fprintf(stderr, "can not allocate buffer for log msg\n");
-    exit(1);
-  }
-
-  va_start(argp_copy_, str);
-
-  ret = vsprintf(buf, str, argp_copy_);
-  if (ret < 0) {
-    fprintf(stderr, "failed to write log msg to buffer\n");
-    exit(1);
-  }
-  va_end(argp_copy_);
-
-  syslog(LOG_INFO, buf);
-  free(buf);
+  va_list args;
+  va_start(args, str);
+  _log("wrn", str, args);
+  va_end(args);
 }
 
 void perr(char* str, ...) {
-  openlog("Logs", LOG_PID, LOG_USER);
-
-  int ret;
-
-  // Enable use of passing formatted strings directly
-  va_list argp;
-  va_start(argp, str);
-
-  // Make a copy since we need it more than once, im sure there are better ways
-  // for this
-  va_list argp_copy;
-  va_copy(argp_copy, argp);
-  va_list argp_copy_;
-  va_copy(argp_copy_, argp);
-
-  char* time = timestamp();
-  fprintf(stdout, "[ err ] [ %s ] ", time);
-  vfprintf(stdout, str, argp);
-  fprintf(stdout, "\n");
-  va_end(argp);
-  free(time);
-  // Calculate the size we need for our buffer
-  va_start(argp_copy, str);
-  int length;
-  length = calculate_buf_length(str, argp_copy);
-  va_end(argp_copy);
-
-  // Allocate buffer for syslog
-  char* buf = malloc(sizeof(char) * length);
-  if (buf == NULL) {
-    fprintf(stderr, "can not allocate buffer for log msg\n");
-    exit(1);
-  }
-
-  va_start(argp_copy_, str);
-
-  ret = vsprintf(buf, str, argp_copy_);
-  if (ret < 0) {
-    fprintf(stderr, "failed to write log msg to buffer\n");
-    exit(1);
-  }
-  va_end(argp_copy_);
-
-  syslog(LOG_INFO, buf);
-  free(buf);
+  va_list args;
+  va_start(args, str);
+  _log("err", str, args);
+  va_end(args);
 }
 
 void pfnc(const char* str) {
