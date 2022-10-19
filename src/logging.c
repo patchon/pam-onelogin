@@ -49,7 +49,12 @@ char* timestamp() {
 
 static void _log(const char *prefix, const char *format, va_list args) {
   char* time = timestamp();
-  char logstr[2048];
+
+  // Note that this buffer can not be larger than 1684.
+  // If we allocate more, then a pointer that holds the pw-entry for the
+  // current user gets overwritten. This is obviously an issue and a bug
+  // somewhere - I just don't know where and how to fix it ¯\_(ツ)_/¯
+  char logstr[1024];
   int len = snprintf(logstr, sizeof(logstr), "[ %s ] [ %s ] ", prefix, time);
   free(time);
   vsnprintf(&logstr[len], sizeof(logstr) - len, format, args);
