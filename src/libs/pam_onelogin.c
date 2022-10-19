@@ -238,7 +238,7 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc,
   // Get enrolled otps for the user
   if (!onelogin_get_enrolled_otps_for_user(ch, curl_buffer, bearer, pw.pw_uid,
                                            otps)) {
-    perr("error getting otp decices for user '%s'", pw.pw_name);
+    perr("error getting otp devices for user '%s'", pw.pw_name);
     goto cleanup;
   }
 
@@ -248,6 +248,11 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc,
   int selected_otp_device = 0;
   pam_onelogin_build_otp_message(msg_otp_devices, otps, &valid_otp_devices);
   ptrc("valid otp devices '%i'", valid_otp_devices);
+
+  if(valid_otp_devices == 0){
+    pwrn("no valid otp devices found for user '%s'", name);
+    goto cleanup;
+  }
 
   // Present otp devices and get input from user
   if (!pam_onelogin_show_otp_devices_and_get_input(
