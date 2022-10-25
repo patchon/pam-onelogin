@@ -85,6 +85,7 @@ int main(int argc, char *argv[]) {
   struct curl_buffer *curl_buffer =
       (struct curl_buffer *)malloc(sizeof(struct curl_buffer));
 
+  int ret_val = 1;
   // Init curl, hardcode 10 second timeout for now
   if ((ch = curl_easy_init()) == NULL) {
     perr("could not initialize curl");
@@ -205,7 +206,7 @@ int main(int argc, char *argv[]) {
     if (putgrent(&gr, file_group) < 0) {
       perr("failure writing group entry to cache file '%s' (%s)",
            CACHE_FILE_PASSWD, strerror(errno));
-      exit(1);
+      goto cleanup;
     }
   }
 
@@ -220,7 +221,7 @@ int main(int argc, char *argv[]) {
       if (putgrent(&gr, file_group) < 0) {
         perr("failure writing group entry to cache file '%s' (%s)",
              CACHE_FILE_PASSWD, strerror(errno));
-        exit(1);
+        goto cleanup;
       }
     }
   }
@@ -229,8 +230,9 @@ int main(int argc, char *argv[]) {
   if (!onelogin_cache_close(&file_passwd) ||
       !onelogin_cache_close(&file_group)) {
     perr("failed to close filehandle for cache files");
-    exit(1);
+    goto cleanup;
   }
+  ret_val = 0;
 
 cleanup:
   free(curl_buffer);
@@ -238,7 +240,7 @@ cleanup:
       curl_easy_cleanup(ch);
       curl_easy_reset(ch);
   }
-  return 0;
+  return ret_val;
 }
 
 void build_users_lists(CURL *ch, struct curl_buffer *curl_buffer, char *bearer,
