@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 
   // Init curl, hardcode 10 second timeout for now
   if ((ch = curl_easy_init()) == NULL) {
-    perr("could not initialze curl");
+    perr("could not initialize curl");
     goto cleanup;
   }
   curl_easy_setopt(ch, CURLOPT_TIMEOUT, CURL_TIMEOUT);
