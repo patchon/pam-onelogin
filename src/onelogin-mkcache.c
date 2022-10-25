@@ -234,8 +234,10 @@ int main(int argc, char *argv[]) {
 
 cleanup:
   free(curl_buffer);
-  curl_easy_cleanup(ch);
-  curl_easy_reset(ch);
+  if (ch) {
+      curl_easy_cleanup(ch);
+      curl_easy_reset(ch);
+  }
 }
 
 void build_users_lists(CURL *ch, struct curl_buffer *curl_buffer, char *bearer,
