@@ -117,8 +117,10 @@ int main(int argc, char *argv[]) {
   }
 
   // Based on the above list, get users info and add passwd and primary grp
-  add_users_and_primary_group(ch, curl_buffer, bearer, users, file_passwd,
-                              file_group);
+  if (!add_users_and_primary_group(ch, curl_buffer, bearer, users, file_passwd,
+                                   file_group)) {
+      goto cleanup;
+  }
 
   // Close files
   if (!onelogin_cache_close(&file_passwd) ||
@@ -274,7 +276,7 @@ void build_users_lists(CURL *ch, struct curl_buffer *curl_buffer, char *bearer,
   pinf("users that has any of the required roles '%s'", users);
 }
 
-void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
+bool add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
                                  char *bearer, char *users, FILE *file_passwd,
                                  FILE *file_group) {
   char *p_user_to_lookup;
@@ -297,7 +299,7 @@ void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
       // This should not happen, we got an id from a role, but when we lookup
       // that id, we got no info
       perr("no user with id '%s' returned from onelogin", p_user_to_lookup);
-      exit(1);
+      return false;
     } else {
       // We got info about a user
       pinf("data from user lookup '%s'", user_data);
@@ -306,7 +308,7 @@ void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
       // like a json
       if (user_data[strlen(user_data) - 1] != '}') {
         perr("allocated user data buffer is to small or no json returned");
-        exit(1);
+        return false;
       }
 
       // Extract username from returned data
@@ -317,7 +319,7 @@ void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
       // Make sure our delimiter is in place
       if (strstr(extracted_onelogin_username, "@") == 0) {
         perr("could not find the '@' delimiter in username");
-        exit(1);
+        return false;
       }
 
       strtok(extracted_onelogin_username, "@");
@@ -348,7 +350,7 @@ void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
         util_print_pw_str("failed to store the following entry in cache", &pw);
         perr("failure writing entry to cache file '%s' (%s)", CACHE_FILE_PASSWD,
              strerror(errno));
-        exit(1);
+        return false;
       }
 
       // Create group struct,
@@ -360,7 +362,7 @@ void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
       if (putgrent(&gr, file_group) < 0) {
         perr("failure writing entry to cache file '%s' (%s)", CACHE_FILE_GROUP,
              strerror(errno));
-        exit(1);
+        return false;
       }
       util_print_pw_str("successfully stored the following entry in cache",
                         &pw);
@@ -368,6 +370,7 @@ void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
 
     p_user_to_lookup = strtok_r(NULL, ",", &strtok_user_to_lookup);
   }
+  return true;
 }
 
 int fetch_pw_entry(char *uid, char *username, FILE *file_passwd, int len) {
