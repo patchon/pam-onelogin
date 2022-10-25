@@ -238,6 +238,7 @@ cleanup:
       curl_easy_cleanup(ch);
       curl_easy_reset(ch);
   }
+  return 0;
 }
 
 void build_users_lists(CURL *ch, struct curl_buffer *curl_buffer, char *bearer,
