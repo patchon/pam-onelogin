@@ -45,6 +45,7 @@
 #include "headers/onelogin.h"
 
 int main(int argc, char *argv[]) {
+  (void) argv;
   char bearer[LENGTH_BEARER] = {'\0'};
   CURL *ch;
   FILE *file_passwd;
@@ -235,8 +236,6 @@ cleanup:
   free(curl_buffer);
   curl_easy_cleanup(ch);
   curl_easy_reset(ch);
-
-  (void)argv;
 }
 
 void build_users_lists(CURL *ch, struct curl_buffer *curl_buffer, char *bearer,
