@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
   char username[64];
   int len;
   char role_members_real[3200] = {'\0'};
-  char *grp_members[64] = {'\0'};
+  char *grp_members[64] = {NULL};
   char **ptr_grp_members = &grp_members[0];
   char grp_members_buffer[64][256];
   char *p_user_to_add;
