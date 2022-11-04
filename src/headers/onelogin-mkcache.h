@@ -24,6 +24,7 @@
 #include <curl/curl.h>
 #include <pwd.h>
 #include <security/pam_appl.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 #include "curler.h"
@@ -33,7 +34,7 @@
 int open_cache_files(FILE **file_passwd, FILE **file_grou, char *mode_passwd,
                      char *mode_group);
 
-void add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
+bool add_users_and_primary_group(CURL *ch, struct curl_buffer *curl_buffer,
                                  char *bearer, char *users, FILE *file_passwd,
                                  FILE *file_group);
 
